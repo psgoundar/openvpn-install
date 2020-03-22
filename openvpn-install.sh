@@ -709,11 +709,27 @@ function installOpenVPN() {
 			;;
 		esac
 
+<<<<<<< HEAD
 		# Generate a random, alphanumeric identifier of 16 characters for CN and one for server name
 		SERVER_CN="cn_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
 		echo "$SERVER_CN" >SERVER_CN_GENERATED
 		SERVER_NAME="server_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
 		echo "$SERVER_NAME" >SERVER_NAME_GENERATED
+=======
+	# Generate a random, alphanumeric identifier of 16 characters for CN and one for server name
+	#SERVER_CN="cn_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
+	#SERVER_NAME="server_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
+	#echo "set_var EASYRSA_REQ_CN $SERVER_CN" >> vars
+
+	#############Modified Section    
+	SERVER_CN="OPENVPNS1"
+    SERVER_NAME="OPENVPNSRV"
+    echo "set_var EASYRSA_REQ_CN $SERVER_CN" >> vars
+    echo "set_var EASYRSA_CA_EXPIRE      14600" >> vars
+    echo "set_var EASYRSA_CERT_EXPIRE    12775" >> vars
+    #echo "set_var EASYRSA_CERT_EXPIRE    1080" >> vars
+	####################################
+>>>>>>> Certificate Expiry date changes
 
 		echo "set_var EASYRSA_REQ_CN $SERVER_CN" >>vars
 
