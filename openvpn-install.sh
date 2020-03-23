@@ -1360,6 +1360,7 @@ function manageMenu () {
 	echo "   1) Add a new user"
 	echo "   2) Revoke existing user"
 <<<<<<< HEAD
+<<<<<<< HEAD
 	echo "   3) Remove OpenVPN"
 	echo "   4) Exit"
 <<<<<<< HEAD
@@ -1369,6 +1370,10 @@ function manageMenu () {
 =======
 	echo "   4) List Current Issued Certificates"
 	echo "   5) List Current Users"
+=======
+	echo "   3) List Current Issued Certificates"
+	echo "   4) List Current Users"
+>>>>>>> Menu Updates
 	echo "   8) Remove OpenVPN"
 	echo "   9) Exit"
 >>>>>>> Fixed Menu Listing
@@ -1388,12 +1393,20 @@ function manageMenu () {
 	3)
 		removeOpenVPN
 		;;
+<<<<<<< HEAD
 	4)
 		exit 0
 =======
 		4)
+=======
+		3)
+>>>>>>> Menu Updates
 			listcerts
 		;;
+		4)
+			echo "TBD"
+		;;
+
 
 
 		8)
