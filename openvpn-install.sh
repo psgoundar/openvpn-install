@@ -1361,8 +1361,13 @@ function manageMenu () {
 	echo "   2) Revoke existing user"
 	echo "   3) Remove OpenVPN"
 	echo "   4) Exit"
+<<<<<<< HEAD
 	until [[ $MENU_OPTION =~ ^[1-4]$ ]]; do
 		read -rp "Select an option [1-4]: " MENU_OPTION
+=======
+	until [[ "$MENU_OPTION" =~ ^[1-4]$ ]]; do
+		read -rp "Select an option [1-9]: " MENU_OPTION
+>>>>>>> Updated Menu
 	done
 
 	case $MENU_OPTION in
@@ -1372,11 +1377,24 @@ function manageMenu () {
 	2)
 		revokeClient
 		;;
+<<<<<<< HEAD
 	3)
 		removeOpenVPN
 		;;
 	4)
 		exit 0
+=======
+		4)
+			listcerts
+		;;
+
+
+		8)
+			removeOpenVPN
+		;;
+		9)
+			exit 0
+>>>>>>> Updated Menu
 		;;
 	esac
 }
