@@ -906,17 +906,21 @@ ncp-ciphers $CIPHER
 tls-server
 tls-version-min 1.2
 tls-cipher $CC_CIPHER
+<<<<<<< HEAD
 client-config-dir /etc/openvpn/ccd
 status /var/log/openvpn/status.log
 verb 3" >>/etc/openvpn/server.conf
+=======
+status /var/log/openvpn/status.log 20
+verb 3" >> /etc/openvpn/server.conf
+>>>>>>> Updated File locations for Log files in Server.conf
 
 <<<<<<< HEAD
 	# Create client-config-dir dir
 	mkdir -p /etc/openvpn/ccd
 =======
 #Creating log files for Openvpn
-echo "status /var/log/openvpn-status.log 20
-status-version 3" >> /etc/openvpn/server.conf
+echo "status-version 3" >> /etc/openvpn/server.conf
 echo "log-append /var/log/openvpn.log" >> /etc/openvpn/server.conf
 
 >>>>>>> Added PiVPN function listclients
@@ -1354,7 +1358,7 @@ printf "\n"
 }
 
 function showclients() {
-STATUS_LOG="/var/log/openvpn-status.log"
+STATUS_LOG="/var/log/openvpn/status.log"
 
 if [ ! -f "${STATUS_LOG}" ]; then
     echo "The file: $STATUS_LOG was not found!"
