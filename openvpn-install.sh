@@ -1331,7 +1331,7 @@ function manageMenu() {
 function listcerts () {
 
 # Original Script from PiVPN: list clients script
-# Modified Script to add Certificate expiration Date -- Swamy Goundar 03/28/2020
+# Modified Script to add Certificate expiration Date -- Swamy Goundar  03/28/2020
 
 
 INDEX="/etc/openvpn/easy-rsa/pki/index.txt"
