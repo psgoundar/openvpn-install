@@ -211,7 +211,7 @@ access-control: fd42:42:42:42::/112 allow' >>/etc/unbound/openvpn.conf
 
 function installQuestions() {
 	echo "Welcome to the OpenVPN installer!"
-	echo "The git repository is available at: https://github.com/angristan/openvpn-install"
+	echo "The git repository is available at: https://github.com/psgoundar/openvpn-install"
 	echo ""
 
 	echo "I need to ask you a few questions before starting the setup."
@@ -734,8 +734,14 @@ function installOpenVPN() {
 
 		echo "set_var EASYRSA_REQ_CN $SERVER_CN" >>vars
 
+<<<<<<< HEAD
 		# Create the PKI, set up the CA, the DH params and the server certificate
 		./easyrsa init-pki
+=======
+        # Workaround to remove unharmful error until easy-rsa 3.0.7
+        # https://github.com/OpenVPN/easy-rsa/issues/261
+    	sed -i 's/^RANDFILE/#RANDFILE/g' pki/openssl-easyrsa.cnf
+>>>>>>> Set Server Cert to 12775 All others to 1080 Days
 
 		# Workaround to remove unharmful error until easy-rsa 3.0.7
 		# https://github.com/OpenVPN/easy-rsa/issues/261
@@ -743,10 +749,18 @@ function installOpenVPN() {
 
 		./easyrsa --batch build-ca nopass
 
+<<<<<<< HEAD
 		if [[ $DH_TYPE == "2" ]]; then
 			# ECDH keys are generated on-the-fly so we don't need to generate them beforehand
 			openssl dhparam -out dh.pem $DH_KEY_SIZE
 		fi
+=======
+	./easyrsa build-server-full "$SERVER_NAME" nopass
+	EASYRSA_CRL_DAYS=3650 ./easyrsa gen-crl
+#Replace Cert Lifetime back to 1080 Days leaving only the Server Cert as 12775 Days
+	sed -i 's/12775/1080/' vars
+
+>>>>>>> Set Server Cert to 12775 All others to 1080 Days
 
 		./easyrsa build-server-full "$SERVER_NAME" nopass
 		EASYRSA_CRL_DAYS=3650 ./easyrsa gen-crl
