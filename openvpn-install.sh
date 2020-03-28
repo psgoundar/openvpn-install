@@ -1466,8 +1466,15 @@ function manageMenu () {
 	echo "   5) List Current Users"
 =======
 	echo "   3) List Current Issued Certificates"
+<<<<<<< HEAD
 	echo "   4) List Current Users"
 >>>>>>> Menu Updates
+=======
+	echo "   4) List Current Active Users"
+	echo "   5) Backup Configuration *Incomplete"
+	echo "   6) Restore Configuration from Backup *Incomplete"
+	echo "   7) Sync Configuration to Alternate Servers *Incomplete"
+>>>>>>> Added Placeholder for New Features 6,7,8 to Menu
 	echo "   8) Remove OpenVPN"
 	echo "   9) Exit"
 >>>>>>> Fixed Menu Listing
