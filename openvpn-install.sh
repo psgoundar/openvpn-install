@@ -1464,6 +1464,45 @@ fi
 
 
 }
+
+function backupconfig () {
+####################################
+#
+# Backup script.
+#
+####################################
+
+# What to backup. 
+backup_files="/etc/openvpn /opt/code /opt/ovpn"
+
+# Where to backup to.
+dest="/opt/backup"
+
+# Create archive filename.
+day=$(date +%F)
+hostname=$(hostname -s)
+archive_file="$hostname-$day.tgz"
+
+# Print start status message.
+echo "Backing up $backup_files to $dest/$archive_file"
+date
+echo
+
+# Backup the files using tar.
+tar czf $dest/$archive_file $backup_files
+
+# Print end status message.
+echo
+echo "Backup finished"
+date
+
+}
+
+function restoreconfig () {
+
+
+}
+
 function manageMenu () {
 	clear
 >>>>>>> Added PiVPN Function listcerts
@@ -1493,7 +1532,7 @@ function manageMenu () {
 >>>>>>> Menu Updates
 =======
 	echo "   4) List Current Active Users"
-	echo "   5) Backup Configuration *Incomplete"
+	echo "   5) Backup Configuration"
 	echo "   6) Restore Configuration from Backup *Incomplete"
 	echo "   7) Sync Configuration to Alternate Servers *Incomplete"
 >>>>>>> Added Placeholder for New Features 6,7,8 to Menu
@@ -1533,7 +1572,9 @@ function manageMenu () {
 		4)
 			showclients
 		;;
-
+		5)
+			backupconfig
+		;;
 
 
 		8)
