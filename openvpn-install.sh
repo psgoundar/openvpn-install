@@ -1499,8 +1499,12 @@ date
 }
 
 function restoreconfig () {
-
-
+####################################
+#
+# Restore script.
+#
+####################################
+echo "Restore Script"
 }
 
 function manageMenu () {
