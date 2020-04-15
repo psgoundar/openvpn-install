@@ -922,10 +922,14 @@ tls-server
 tls-version-min 1.2
 tls-cipher $CC_CIPHER
 <<<<<<< HEAD
+<<<<<<< HEAD
 client-config-dir /etc/openvpn/ccd
 status /var/log/openvpn/status.log
 verb 3" >>/etc/openvpn/server.conf
 =======
+=======
+client-config-dir /etc/openvpn/ccd
+>>>>>>> ccd changes
 status /var/log/openvpn/status.log 20
 verb 3" >> /etc/openvpn/server.conf
 >>>>>>> Updated File locations for Log files in Server.conf
@@ -938,7 +942,12 @@ verb 3" >> /etc/openvpn/server.conf
 echo "status-version 3" >> /etc/openvpn/server.conf
 echo "log-append /var/log/openvpn.log" >> /etc/openvpn/server.conf
 
+<<<<<<< HEAD
 >>>>>>> Added PiVPN function listclients
+=======
+	# Create client-config-dir dir
+	mkdir -p /etc/openvpn/ccd
+>>>>>>> ccd changes
 	# Create log dir
 	mkdir -p /var/log/openvpn
 
