@@ -923,6 +923,7 @@ tls-version-min 1.2
 tls-cipher $CC_CIPHER
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 client-config-dir /etc/openvpn/ccd
 status /var/log/openvpn/status.log
 verb 3" >>/etc/openvpn/server.conf
@@ -930,10 +931,13 @@ verb 3" >>/etc/openvpn/server.conf
 =======
 client-config-dir /etc/openvpn/ccd
 >>>>>>> ccd changes
+=======
+>>>>>>> Reverting Changes to be  consistant with angristan
 status /var/log/openvpn/status.log 20
 verb 3" >> /etc/openvpn/server.conf
 >>>>>>> Updated File locations for Log files in Server.conf
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	# Create client-config-dir dir
 	mkdir -p /etc/openvpn/ccd
@@ -948,9 +952,15 @@ echo "log-append /var/log/openvpn.log" >> /etc/openvpn/server.conf
 	# Create client-config-dir dir
 	mkdir -p /etc/openvpn/ccd
 >>>>>>> ccd changes
+=======
+
+>>>>>>> Reverting Changes to be  consistant with angristan
 	# Create log dir
 	mkdir -p /var/log/openvpn
 
+	#Creating log files for Openvpn
+	echo "status-version 3" >> /etc/openvpn/server.conf
+	echo "log-append /var/log/openvpn.log" >> /etc/openvpn/server.conf
 	# Enable routing
 	echo 'net.ipv4.ip_forward=1' >/etc/sysctl.d/20-openvpn.conf
 	if [[ $IPV6_SUPPORT == 'y' ]]; then
