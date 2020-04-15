@@ -935,6 +935,7 @@ client-config-dir /etc/openvpn/ccd
 >>>>>>> Reverting Changes to be  consistant with angristan
 status /var/log/openvpn/status.log 20
 verb 3" >> /etc/openvpn/server.conf
+<<<<<<< HEAD
 >>>>>>> Updated File locations for Log files in Server.conf
 
 <<<<<<< HEAD
@@ -955,6 +956,9 @@ echo "log-append /var/log/openvpn.log" >> /etc/openvpn/server.conf
 =======
 
 >>>>>>> Reverting Changes to be  consistant with angristan
+=======
+
+>>>>>>> Misc
 	# Create log dir
 	mkdir -p /var/log/openvpn
 
