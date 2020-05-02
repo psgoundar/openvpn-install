@@ -730,6 +730,7 @@ function installOpenVPN() {
     echo "set_var EASYRSA_CERT_EXPIRE    12775" >> vars
     #echo "set_var EASYRSA_CERT_EXPIRE    1080" >> vars
 	####################################
+<<<<<<< HEAD
 >>>>>>> Certificate Expiry date changes
 
 		echo "set_var EASYRSA_REQ_CN $SERVER_CN" >>vars
@@ -742,6 +743,15 @@ function installOpenVPN() {
         # https://github.com/OpenVPN/easy-rsa/issues/261
     	sed -i 's/^RANDFILE/#RANDFILE/g' pki/openssl-easyrsa.cnf
 >>>>>>> Set Server Cert to 12775 All others to 1080 Days
+=======
+
+	# Create the PKI, set up the CA, the DH params and the server certificate
+	./easyrsa init-pki
+
+        # Workaround to remove unharmful error until easy-rsa 3.0.7
+        # https://github.com/OpenVPN/easy-rsa/issues/261
+    	sed -i 's/^RANDFILE/#RANDFILE/g' pki/openssl-easyrsa.cnf
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 
 		# Workaround to remove unharmful error until easy-rsa 3.0.7
 		# https://github.com/OpenVPN/easy-rsa/issues/261
@@ -759,6 +769,10 @@ function installOpenVPN() {
 	EASYRSA_CRL_DAYS=3650 ./easyrsa gen-crl
 #Replace Cert Lifetime back to 1080 Days leaving only the Server Cert as 12775 Days
 	sed -i 's/12775/1080/' vars
+<<<<<<< HEAD
+=======
+
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 
 >>>>>>> Set Server Cert to 12775 All others to 1080 Days
 
@@ -925,6 +939,7 @@ tls-cipher $CC_CIPHER
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 client-config-dir /etc/openvpn/ccd
 status /var/log/openvpn/status.log
 verb 3" >>/etc/openvpn/server.conf
@@ -961,13 +976,18 @@ echo "log-append /var/log/openvpn.log" >> /etc/openvpn/server.conf
 
 >>>>>>> Misc
 =======
+=======
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 client-config-dir /etc/openvpn/ccd
 status /var/log/openvpn/status.log 20
 verb 3" >> /etc/openvpn/server.conf
 
 	# Create client-config-dir dir
 	mkdir -p /etc/openvpn/ccd
+<<<<<<< HEAD
 >>>>>>> Commit
+=======
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 	# Create log dir
 	mkdir -p /var/log/openvpn
 
@@ -1169,12 +1189,17 @@ function newClient() {
 
 	# Home directory of the user, where the client configuration (.ovpn) will be written
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if [ -e "/home/$CLIENT" ]; then # if $1 is a user name
 		homeDir="/home/$CLIENT"
 =======
 	if [ -e "/home/$CLIENT" ]; then  # if $1 is a user name
 		homeDir="/opt/ovpn"
 >>>>>>> Change Client profiles save folder to /opt/ovpn
+=======
+	if [ -e "/home/$CLIENT" ]; then  # if $1 is a user name
+		homeDir="/opt/ovpn"
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 	elif [ "${SUDO_USER}" ]; then # if not, use SUDO_USER
 		homeDir="/opt/ovpn"
 	else # if not SUDO_USER, use /root
@@ -1372,8 +1397,11 @@ function removeOpenVPN() {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 function manageMenu() {
 =======
+=======
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 function listcerts () {
 
 # Original Script from PiVPN: list clients script
@@ -1561,6 +1589,7 @@ function manageMenu () {
 	echo "   2) Revoke existing user"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	echo "   3) Remove OpenVPN"
 	echo "   4) Exit"
 <<<<<<< HEAD
@@ -1576,10 +1605,14 @@ function manageMenu () {
 	echo "   4) List Current Users"
 >>>>>>> Menu Updates
 =======
+=======
+	echo "   3) List Current Issued Certificates"
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 	echo "   4) List Current Active Users"
 	echo "   5) Backup Configuration"
 	echo "   6) Restore Configuration from Backup *Incomplete"
 	echo "   7) Sync Configuration to Alternate Servers *Incomplete"
+<<<<<<< HEAD
 >>>>>>> Added Placeholder for New Features 6,7,8 to Menu
 	echo "   8) Remove OpenVPN"
 	echo "   9) Exit"
@@ -1591,6 +1624,12 @@ function manageMenu () {
 >>>>>>> Fixed Menu Selection Error
 		read -rp "Select an option [1-9]: " MENU_OPTION
 >>>>>>> Updated Menu
+=======
+	echo "   8) Remove OpenVPN"
+	echo "   9) Exit"
+	until [[ "$MENU_OPTION" =~ ^[1-9]$ ]]; do
+		read -rp "Select an option [1-9]: " MENU_OPTION
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 	done
 
 	case $MENU_OPTION in
@@ -1611,7 +1650,10 @@ function manageMenu () {
 		4)
 =======
 		3)
+<<<<<<< HEAD
 >>>>>>> Menu Updates
+=======
+>>>>>>> 95be2fa3f039c6d9667430c3b858e03da606199b
 			listcerts
 		;;
 		4)
