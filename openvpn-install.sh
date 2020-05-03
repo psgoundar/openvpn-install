@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Secure OpenVPN server installer for Debian, Ubuntu, CentOS, Amazon Linux 2, Fedora and Arch Linux
-# https://github.com/angristan/openvpn-install
+# Original Script from https://github.com/angristan/openvpn-install
+# Additional features imported from https://www.pivpn.io/
 
 function isRoot() {
 	if [ "$EUID" -ne 0 ]; then
@@ -210,7 +211,7 @@ access-control: fd42:42:42:42::/112 allow' >>/etc/unbound/openvpn.conf
 
 function installQuestions() {
 	echo "Welcome to the OpenVPN installer!"
-	echo "The git repository is available at: https://github.com/angristan/openvpn-install"
+	echo "The git repository is available at: https://github.com/psgoundar/openvpn-install"
 	echo ""
 
 	echo "I need to ask you a few questions before starting the setup."
@@ -709,20 +710,29 @@ function installOpenVPN() {
 			;;
 		esac
 
-		# Generate a random, alphanumeric identifier of 16 characters for CN and one for server name
-		SERVER_CN="cn_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
-		echo "$SERVER_CN" >SERVER_CN_GENERATED
-		SERVER_NAME="server_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
-		echo "$SERVER_NAME" >SERVER_NAME_GENERATED
+	# Generate a random, alphanumeric identifier of 16 characters for CN and one for server name
+	#SERVER_CN="cn_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
+	#SERVER_NAME="server_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
+	#echo "set_var EASYRSA_REQ_CN $SERVER_CN" >> vars
+
+	#############Modified Section    
+	SERVER_CN="OPENVPNS1"
+    SERVER_NAME="OPENVPNSRV"
+    echo "set_var EASYRSA_REQ_CN $SERVER_CN" >> vars
+    echo "set_var EASYRSA_CA_EXPIRE      14600" >> vars
+    echo "set_var EASYRSA_CERT_EXPIRE    12775" >> vars
+    #echo "set_var EASYRSA_CERT_EXPIRE    1080" >> vars
+	####################################
 
 		echo "set_var EASYRSA_REQ_CN $SERVER_CN" >>vars
 
 		# Create the PKI, set up the CA, the DH params and the server certificate
 		./easyrsa init-pki
+        # Workaround to remove unharmful error until easy-rsa 3.0.7
+        # https://github.com/OpenVPN/easy-rsa/issues/261
+    	sed -i 's/^RANDFILE/#RANDFILE/g' pki/openssl-easyrsa.cnf
 
-		# Workaround to remove unharmful error until easy-rsa 3.0.7
-		# https://github.com/OpenVPN/easy-rsa/issues/261
-		sed -i 's/^RANDFILE/#RANDFILE/g' pki/openssl-easyrsa.cnf
+
 
 		./easyrsa --batch build-ca nopass
 
@@ -891,14 +901,17 @@ tls-server
 tls-version-min 1.2
 tls-cipher $CC_CIPHER
 client-config-dir /etc/openvpn/ccd
-status /var/log/openvpn/status.log
-verb 3" >>/etc/openvpn/server.conf
+status /var/log/openvpn/status.log 20
+verb 3" >> /etc/openvpn/server.conf
 
 	# Create client-config-dir dir
 	mkdir -p /etc/openvpn/ccd
 	# Create log dir
 	mkdir -p /var/log/openvpn
 
+	#Creating log files for Openvpn
+	echo "status-version 3" >> /etc/openvpn/server.conf
+	echo "log-append /var/log/openvpn.log" >> /etc/openvpn/server.conf
 	# Enable routing
 	echo 'net.ipv4.ip_forward=1' >/etc/sysctl.d/20-openvpn.conf
 	if [[ $IPV6_SUPPORT == 'y' ]]; then
@@ -1093,12 +1106,12 @@ function newClient() {
 	fi
 
 	# Home directory of the user, where the client configuration (.ovpn) will be written
-	if [ -e "/home/$CLIENT" ]; then # if $1 is a user name
-		homeDir="/home/$CLIENT"
+	if [ -e "/home/$CLIENT" ]; then  # if $1 is a user name
+		homeDir="/opt/ovpn"
 	elif [ "${SUDO_USER}" ]; then # if not, use SUDO_USER
-		homeDir="/home/${SUDO_USER}"
+		homeDir="/opt/ovpn"
 	else # if not SUDO_USER, use /root
-		homeDir="/root"
+		homeDir="/opt/ovpn"
 	fi
 
 	# Determine if we use tls-auth or tls-crypt
@@ -1291,7 +1304,182 @@ function removeOpenVPN() {
 	fi
 }
 
-function manageMenu() {
+function listcerts () {
+
+# Original Script from PiVPN: list clients script
+# Modified Script to add Certificate expiration Date -- Swamy Goundar  03/28/2020
+
+
+INDEX="/etc/openvpn/easy-rsa/pki/index.txt"
+printf "\n"
+if [ ! -f "${INDEX}" ]; then
+        echo "The file: $INDEX was not found!"
+        exit 1
+fi
+
+#printf ": NOTE : The first entry should always be your valid server!\n"
+#printf "\n"
+printf "\e[1m::: Certificate Status List :::\e[0m\n"
+{
+printf "\\e[4mStatus\\e[0m  \t  \\e[4mName\\e[0m\\e[0m  \t  \\e[4mExpiration\\e[0m\\n"
+
+while read -r line || [ -n "$line" ]; do
+    STATUS=$(echo "$line" | awk '{print $1}')
+    NAME=$(echo "$line" | sed -e 's:.*/CN=::')
+    EXPD=$(echo "$line" | awk '{if (length($2) == 15) print $2; else print "20"$2}' | cut -b 1-8 | date +"%b %d %Y" -f -)
+        
+    if [ "${STATUS}" == "V" ]; then
+        printf "Valid  \t  %s  \t  %s\\n" "$NAME" "$EXPD"
+    elif [ "${STATUS}" == "R" ]; then
+        printf "Revoked  \t  %s  \t  %s\\n" "$NAME" "$EXPD"
+    else
+        printf "Unknown  \t  %s  \t  %s\\n" "$NAME" "$EXPD"
+    fi
+done <${INDEX} 
+printf "\\n"
+} | column -t -s $'\t'
+
+}
+
+function showclients() {
+STATUS_LOG="/var/log/openvpn/status.log"
+
+if [ ! -f "${STATUS_LOG}" ]; then
+    echo "The file: $STATUS_LOG was not found!"
+    exit 1
+fi
+
+scriptusage(){
+    echo "::: List any connected clients to the server"
+    echo ":::"
+    echo "::: Usage: pivpn <-c|clients> [-b|bytes]"
+    echo ":::"
+    echo "::: Commands:"
+    echo ":::  [none]              List clients with human readable format"
+    echo ":::  -b, bytes           List clients with dotted decimal notation"
+    echo ":::  -h, help            Show this usage dialog"
+}
+
+hr(){
+    numfmt --to=iec-i --suffix=B "$1"
+}
+
+
+listClients(){
+    printf ": NOTE : The output below is NOT real-time!\n"
+    printf ":      : It may be off by a few minutes.\n"
+    printf "\n"
+    printf "\e[1m::: Client Status List :::\e[0m\n"
+
+    {
+    printf "\e[4mName\e[0m  \t  \e[4mRemote IP\e[0m  \t  \e[4mVirtual IP\e[0m  \t  \e[4mBytes Received\e[0m  \t  \e[4mBytes Sent\e[0m  \t  \e[4mConnected Since\e[0m\n"
+
+    if grep -q "^CLIENT_LIST" "${STATUS_LOG}"; then
+            if [ -n "$(type -t numfmt)" ]; then
+                if [ "$HR" = 1 ]; then
+                    while read -r line; do
+                        read -r -a array <<< $line
+                        [[ ${array[0]} = CLIENT_LIST ]] || continue
+                        printf "%s  \t  %s  \t  %s  \t  %s  \t  %s  \t  %s %s %s - %s\n" ${array[1]} ${array[2]} ${array[3]} $(hr ${array[4]}) $(hr ${array[5]}) ${array[7]} ${array[8]} ${array[10]} ${array[9]}
+                    done <$STATUS_LOG
+                else
+                    while read -r line; do
+                        read -r -a array <<< $line
+                        [[ ${array[0]} = CLIENT_LIST ]] || continue
+                        printf "%s  \t  %s  \t  %s  \t  %'d  \t  %'d  \t  %s %s %s - %s\n" ${array[1]} ${array[2]} ${array[3]} ${array[4]} ${array[5]} ${array[7]} ${array[8]} ${array[10]} ${array[9]}
+                    done <$STATUS_LOG
+                fi
+            else
+                awk -F' ' -v s='CLIENT_LIST' '$1 == s {print $2"\t\t"$3"\t"$4"\t"$5"\t\t"$6"\t\t"$8" "$9" "$11" - "$10"\n"}' ${STATUS_LOG}
+            fi
+    else
+        printf "\nNo Clients Connected!\n"
+    fi
+
+    printf "\n"
+    } | column -t -s $'\t'
+}
+
+if [[ $# -eq 0 ]]; then
+    HR=1
+    listClients
+else
+    while true; do
+        case "$1" in
+            -b|bytes)
+                HR=0
+                listClients
+                exit 0
+                ;;
+            -h|help)
+                scriptusage
+                exit 0
+                ;;
+            *)
+                HR=0
+                listClients
+                exit 0
+                ;;
+        esac
+    done
+fi
+
+
+}
+
+function backupconfig () {
+####################################
+#
+# Backup script.
+#
+####################################
+
+# What to backup. 
+config_files="/etc/openvpn"
+ovpn_files="/opt/ovpn"
+
+# Where to backup to.
+dest="/opt/backup"
+
+# Create archive filename.
+day=$(date +%F)
+hostname=$(hostname -s)
+config_archive_file="config-$hostname-$day.tgz"
+ovpn_archive_file="ovpn-$hostname-$day.tgz"
+
+# Print start status message.
+echo "Backing up $config_files to $dest/$config_archive_file"
+echo "Backing up $ovpn_files to $dest/$ovpn_archive_file"
+date
+echo
+
+# Backup the files using tar.
+tar czf $dest/$config_archive_file $config_files
+tar czf $dest/$ovpn_archive_file $ovpn_files
+
+
+# Print end status message.
+echo
+echo "Backup finished"
+date
+
+}
+
+function restoreconfig () {
+####################################
+#
+# Restore script.
+#
+####################################
+echo "Restore Script"
+Backup_Location="/opt/backup"
+Last_Backup_Config_Archive_File=$(ls -t $Backup_Location/config* | head -n 1)
+Last_Backup_Ovpn_Archive_File=$(ls -t $Backup_Location/ovpn* | head -n 1)
+
+}
+
+function manageMenu () {
+	clear
 	echo "Welcome to OpenVPN-install!"
 	echo "The git repository is available at: https://github.com/angristan/openvpn-install"
 	echo ""
@@ -1300,10 +1488,15 @@ function manageMenu() {
 	echo "What do you want to do?"
 	echo "   1) Add a new user"
 	echo "   2) Revoke existing user"
-	echo "   3) Remove OpenVPN"
-	echo "   4) Exit"
-	until [[ $MENU_OPTION =~ ^[1-4]$ ]]; do
-		read -rp "Select an option [1-4]: " MENU_OPTION
+	echo "   3) List Current Issued Certificates"
+	echo "   4) List Current Active Users"
+	echo "   5) Backup Configuration"
+	echo "   6) Restore Configuration from Backup *Incomplete"
+	echo "   7) Sync Configuration to Alternate Servers *Incomplete"
+	echo "   8) Remove OpenVPN"
+	echo "   9) Exit"
+	until [[ "$MENU_OPTION" =~ ^[1-9]$ ]]; do
+		read -rp "Select an option [1-9]: " MENU_OPTION
 	done
 
 	case $MENU_OPTION in
@@ -1313,11 +1506,22 @@ function manageMenu() {
 	2)
 		revokeClient
 		;;
-	3)
-		removeOpenVPN
+		3)
+			listcerts
 		;;
-	4)
-		exit 0
+		4)
+			showclients
+		;;
+		5)
+			backupconfig
+		;;
+
+
+		8)
+			removeOpenVPN
+		;;
+		9)
+			exit 0
 		;;
 	esac
 }
