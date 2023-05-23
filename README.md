@@ -1,8 +1,10 @@
 # openvpn-install
 
-![Test](https://github.com/angristan/openvpn-install/workflows/Test/badge.svg) ![Lint](https://github.com/angristan/openvpn-install/workflows/Lint/badge.svg)
+![Test](https://github.com/angristan/openvpn-install/workflows/Test/badge.svg)
+![Lint](https://github.com/angristan/openvpn-install/workflows/Lint/badge.svg)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/angristan)
 
-OpenVPN installer for Debian, Ubuntu, Fedora, CentOS and Arch Linux.
+OpenVPN installer for Debian, Ubuntu, Fedora, CentOS, Arch Linux, Oracle Linux, Rocky Linux and AlmaLinux.
 
 This script will let you setup your own secure VPN server in just a few seconds.
 
@@ -111,25 +113,28 @@ export PASS="1"
 
 ## Compatibility
 
-The script supports these OS and architectures:
+The script supports these Linux distributions:
 
-|                 | i386 | amd64 | armhf | arm64 |
-| --------------- | ---- | ----- | ----- | ----- |
-| Amazon Linux 2  | ❔   | ✅    | ❔    | ❔    |
-| Arch Linux      | ❔   | ✅    | ❔    | ✅    |
-| CentOS 7        | ❔   | ✅    | ❌    | ✅    |
-| CentOS 8        | ❌   | ✅    | ❔    | ❔    |
-| Debian 8        | ✅   | ✅    | ❌    | ❌    |
-| Debian >= 9     | ❌   | ✅    | ✅    | ✅    |
-| Fedora >= 27    | ❔   | ✅    | ❔    | ❔    |
-| Ubuntu 16.04    | ✅   | ✅    | ❌    | ❌    |
-| Ubuntu >= 18.04 | ❌   | ✅    | ✅    | ✅    |
+|                    | Support |
+| ------------------ | ------- |
+| AlmaLinux 8        | ✅       |
+| Amazon Linux 2     | ✅       |
+| Arch Linux         | ✅       |
+| CentOS 7           | ✅ 🤖     |
+| CentOS Stream >= 8 | ✅ 🤖     |
+| Debian >= 10       | ✅ 🤖     |
+| Fedora >= 35       | ✅ 🤖     |
+| Oracle Linux 8     | ✅       |
+| Rocky Linux 8      | ✅       |
+| Ubuntu >= 18.04    | ✅ 🤖     |
 
 To be noted:
 
-- It should work on Debian 8+ and Ubuntu 16.04+. But versions not in the table above are not officially supported.
+- The script is regularly tested against the distributions marked with a 🤖 only.
+  - It's only test on `amd64` architecture.
+- It should work on older versions such as Debian 8+, Ubuntu 16.04+ and previous Fedora releases. But versions not in the table above are not officially supported.
+  - It should also support versions between the LTS versions, but these are not tested.
 - The script requires `systemd`.
-- The script is regularly tested against `amd64` only.
 
 ## Fork
 
@@ -145,9 +150,9 @@ More Q&A in [FAQ.md](FAQ.md).
 
 **A:** I recommend these:
 
-- [Vultr](https://goo.gl/Xyd1Sc): Worldwide locations, IPv6 support, starting at \$3.50/month
-- [PulseHeberg](https://goo.gl/76yqW5): France, unlimited bandwidth, starting at €3/month
-- [Digital Ocean](https://goo.gl/qXrNLK): Worldwide locations, IPv6 support, starting at \$5/month
+- [Vultr](https://www.vultr.com/?ref=8948982-8H): Worldwide locations, IPv6 support, starting at \$5/month
+- [Hetzner](https://hetzner.cloud/?ref=ywtlvZsjgeDq): Germany, Finland and USA. IPv6, 20 TB of traffic, starting at 4.5€/month
+- [Digital Ocean](https://m.do.co/c/ed0ba143fe53): Worldwide locations, IPv6 support, starting at \$4/month
 
 ---
 
@@ -157,7 +162,7 @@ More Q&A in [FAQ.md](FAQ.md).
 
 - Windows: [The official OpenVPN community client](https://openvpn.net/index.php/download/community-downloads.html).
 - Linux: The `openvpn` package from your distribution. There is an [official APT repository](https://community.openvpn.net/openvpn/wiki/OpenvpnSoftwareRepos) for Debian/Ubuntu based distributions.
-- macOS: [Tunnelblick](https://tunnelblick.net/), [Viscosity](https://www.sparklabs.com/viscosity/).
+- macOS: [Tunnelblick](https://tunnelblick.net/), [Viscosity](https://www.sparklabs.com/viscosity/), [OpenVPN for Mac](https://openvpn.net/client-connect-vpn-for-mac-os/).
 - Android: [OpenVPN for Android](https://play.google.com/store/apps/details?id=de.blinkt.openvpn).
 - iOS: [The official OpenVPN Connect client](https://itunes.apple.com/us/app/openvpn-connect/id590379981).
 
@@ -182,21 +187,13 @@ More Q&A in [FAQ.md](FAQ.md).
 Solutions that provision a ready to use OpenVPN server based on this script in one go are available for:
 
 - AWS using Terraform at [`openvpn-terraform-install`](https://github.com/dumrauf/openvpn-terraform-install)
+- Terraform AWS module [`openvpn-ephemeral`](https://registry.terraform.io/modules/paulmarsicloud/openvpn-ephemeral/aws/latest)
 
 ## Contributing
 
-### Contributors hall-of-fame
+## Discuss changes
 
-Thanks ❤️
-
-[![](https://sourcerer.io/fame/angristan/angristan/openvpn-install/images/0)](https://github.com/angristan/openvpn-install/graphs/contributors)
-[![](https://sourcerer.io/fame/angristan/angristan/openvpn-install/images/1)](https://github.com/angristan/openvpn-install/graphs/contributors)
-[![](https://sourcerer.io/fame/angristan/angristan/openvpn-install/images/2)](https://github.com/angristan/openvpn-install/graphs/contributors)
-[![](https://sourcerer.io/fame/angristan/angristan/openvpn-install/images/3)](https://github.com/angristan/openvpn-install/graphs/contributors)
-[![](https://sourcerer.io/fame/angristan/angristan/openvpn-install/images/4)](https://github.com/angristan/openvpn-install/graphs/contributors)
-[![](https://sourcerer.io/fame/angristan/angristan/openvpn-install/images/5)](https://github.com/angristan/openvpn-install/graphs/contributors)
-[![](https://sourcerer.io/fame/angristan/angristan/openvpn-install/images/6)](https://github.com/angristan/openvpn-install/graphs/contributors)
-[![](https://sourcerer.io/fame/angristan/angristan/openvpn-install/images/7)](https://github.com/angristan/openvpn-install/graphs/contributors)
+Please open an issue before submitting a PR if you want to discuss a change, especially if it's a big one.
 
 ### Code formatting
 
@@ -204,19 +201,22 @@ We use [shellcheck](https://github.com/koalaman/shellcheck) and [shfmt](https://
 
 ## Security and Encryption
 
+> **Warning**
+> This has not been updated for OpenVPN 2.5 and later.
+
 OpenVPN's default settings are pretty weak regarding encryption. This script aims to improve that.
 
 OpenVPN 2.4 was a great update regarding encryption. It added support for ECDSA, ECDH, AES GCM, NCP and tls-crypt.
 
 If you want more information about an option mentioned below, head to the [OpenVPN manual](https://community.openvpn.net/openvpn/wiki/Openvpn24ManPage). It is very complete.
 
-Most of OpenVPN's encryption-related stuff is managed by [Easy-RSA](https://github.com/OpenVPN/easy-rsa). Defaults parameters are in the [vars.example](https://github.com/OpenVPN/easy-rsa/blob/v3.0.6/easyrsa3/vars.example) file.
+Most of OpenVPN's encryption-related stuff is managed by [Easy-RSA](https://github.com/OpenVPN/easy-rsa). Defaults parameters are in the [vars.example](https://github.com/OpenVPN/easy-rsa/blob/v3.0.7/easyrsa3/vars.example) file.
 
 ### Compression
 
 By default, OpenVPN doesn't enable compression. This script provides support for LZ0 and LZ4 (v1/v2) algorithms, the latter being more efficient.
 
-However, it is discouraged to use compression since it since the [VORACLE attack](https://protonvpn.com/blog/voracle-attack/) makes use of it.
+However, it is discouraged to use compression since the [VORACLE attack](https://protonvpn.com/blog/voracle-attack/) makes use of it.
 
 ### TLS version
 
@@ -247,9 +247,8 @@ By default, OpenVPN uses `BF-CBC` as the data channel cipher. Blowfish is an old
 
 > The default is BF-CBC, an abbreviation for Blowfish in Cipher Block Chaining mode.
 >
-> Using BF-CBC is no longer recommended, because of its 64-bit block size. This small block size allows attacks based on collisions, as demonstrated by SWEET32. See https://community.openvpn.net/openvpn/wiki/SWEET32 for details.
-
-> Security researchers at INRIA published an attack on 64-bit block ciphers, such as 3DES and Blowfish. They show that they are able to recover plaintext when the same data is sent often enough, and show how they can use cross-site scripting vulnerabilities to send data of interest often enough. This works over HTTPS, but also works for HTTP-over-OpenVPN. See https://sweet32.info/ for a much better and more elaborate explanation.
+> Using BF-CBC is no longer recommended, because of its 64-bit block size. This small block size allows attacks based on collisions, as demonstrated by SWEET32. See <https://community.openvpn.net/openvpn/wiki/SWEET32> for details.
+> Security researchers at INRIA published an attack on 64-bit block ciphers, such as 3DES and Blowfish. They show that they are able to recover plaintext when the same data is sent often enough, and show how they can use cross-site scripting vulnerabilities to send data of interest often enough. This works over HTTPS, but also works for HTTP-over-OpenVPN. See <https://sweet32.info/> for a much better and more elaborate explanation.
 >
 > OpenVPN's default cipher, BF-CBC, is affected by this attack.
 
@@ -346,10 +345,14 @@ The script supports both and uses `tls-crypt` by default.
 
 ## Say thanks
 
-You can [say thanks](https://saythanks.io/to/angristan%40pm.me) if you want!
+You can [say thanks](https://saythanks.io/to/angristan) if you want!
 
 ## Credits & Licence
 
 Many thanks to the [contributors](https://github.com/Angristan/OpenVPN-install/graphs/contributors) and Nyr's original work.
 
 This project is under the [MIT Licence](https://raw.githubusercontent.com/Angristan/openvpn-install/master/LICENSE)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=angristan/openvpn-install&type=Date)](https://star-history.com/#angristan/openvpn-install&Date)

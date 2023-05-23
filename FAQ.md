@@ -10,7 +10,7 @@ You can, of course, it's even recommended, update the `openvpn` package with you
 
 **Q:** How do I check for DNS leaks?
 
-**A:** Go to [dnsleaktest.com](https://dnsleaktest.com/) or [ipleak.net](https://ipleak.net/) with your browser. Only your server's IP should show up.
+**A:** Go to [browserleaks.com](https://browserleaks.com/dns) or [ipleak.net](https://ipleak.net/) (both perform IPv4 and IPv6 check) with your browser. Your IP should not show up (test without and without the VPN). The DNS servers should be the ones you selected during the setup, not your IP address nor your ISP's DNS servers' addresses.
 
 ---
 
@@ -69,7 +69,7 @@ If your client is <2.3.3, remove `tls-version-min 1.2` from your `/etc/openvpn/s
 
 **Q:** IPv6 is not working on my Hetzner VM
 
-**A:** This an issue on their side. See https://angristan.xyz/fix-ipv6-hetzner-cloud/
+**A:** This an issue on their side. See <https://angristan.xyz/fix-ipv6-hetzner-cloud/>
 
 ---
 
@@ -117,10 +117,59 @@ Sysctl options are at `/etc/sysctl.d/20-openvpn.conf`
 
 **A:** Here is a sample bash script to achieve this:
 
- ```sh
+```sh
 userlist=(user1 user2 user3)
 
 for i in ${userlist[@]};do
-    MENU_OPTION=1 CLIENT=$i PASS=1 ./openvpn-install.sh
+   MENU_OPTION=1 CLIENT=$i PASS=1 ./openvpn-install.sh
 done
 ```
+
+From a list in a text file:
+
+```sh
+while read USER
+    do MENU_OPTION="1" CLIENT="$USER" PASS="1" ./openvpn-install.sh
+done < users.txt
+```
+
+---
+
+**Q:** How do I change the default `.ovpn` file created for future clients?
+
+**A:** You can edit the template out of which `.ovpn` files are created by editing `/etc/openvpn/client-template.txt`
+
+---
+
+**Q:** For my clients - I want to set my internal network to pass through the VPN and the rest to go through my internet?
+
+**A:** You would need to edit the `.ovpn` file. You can edit the template out of which those files are created by editing `/etc/openvpn/client-template.txt` file and adding
+
+```sh
+route-nopull
+route 10.0.0.0 255.0.0.0
+```
+
+So for example - here it would route all traffic of `10.0.0.0/8` to the vpn. And the rest through the internet.
+
+---
+
+**Q:** I have enabled IPv6 and my VPN client gets an IPv6 address. Why do I reach the websites or other dual-stacked destionations via IPv4 only?
+
+**A:** This is because inside the tunnel you don't get a publicly routable IPv6 address, instead you get an ULA (Unlique Local Lan) address. Operating systems don't prefer this all the time. You can fix this in your operating system policies as it's unrelated to the VPN itself:
+
+Windows (commands needs to run cmd.exe as Administrator):
+
+```
+netsh interface ipv6 add prefixpolicy fd00::/8 3 1
+```
+
+Linux:
+
+edit `/etc/gai.conf` and uncomment the following line and also change its value to `1`:
+
+```
+label fc00::/7      1
+```
+
+This will not work properly unless you add you your VPN server `server.conf` one or two lines to push at least 1 (one) IPv6 DNS server. Most providers have IPv6 servers as well, add two more lines of `push "dhcp-option DNS <IPv6>"`

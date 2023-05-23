@@ -1,26 +1,14 @@
-on:
-  push:
-    branches:
-    - master
-  pull_request:
-    branches:
-    - master
+on: [push, pull_request]
 
 name: Lint
+
 jobs:
-  shellcheck:
+  super-linter:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: shellcheck
-      uses: ludeeus/action-shellcheck@0.0.1
-      env:
-        SHELLCHECK_OPTS: -e SC1091,SC2164,SC2034,SC1072,SC1073,SC1009
-  shfmt:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: shfmt
-      uses: bltavares/actions/shfmt@master
-      env:
-        SHFMT_ARGS: -d
+      - name: Checkout Code
+        uses: actions/checkout@v3.2.0
+      - name: Lint Code Base
+        uses: github/super-linter@v4.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
